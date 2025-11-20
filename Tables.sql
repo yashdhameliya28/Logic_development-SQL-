@@ -245,3 +245,65 @@ INSERT INTO Fines (BorrowID, FineAmount, PaidStatus) VALUES
 (2, 5.50, 'Unpaid'), -- Unpaid fine (for Q44)
 (1, 2.00, 'Paid'),
 (3, 1.00, 'Unpaid'); -- Another unpaid fine (for Q44)
+
+
+
+CREATE TABLE Departments (
+DepartmentID INT PRIMARY KEY IDENTITY(1,1),
+DepartmentName VARCHAR(100) NOT NULL UNIQUE,
+Budget DECIMAL(12,2) NOT NULL DEFAULT 0.00
+);
+
+CREATE TABLE Courses (
+CourseID INT PRIMARY KEY IDENTITY(1,1),
+CourseCode VARCHAR(10) NOT NULL UNIQUE,
+CourseName VARCHAR(150) NOT NULL,
+DepartmentID INT NOT NULL FOREIGN KEY REFERENCES Departments(DepartmentID),
+Credits INT NOT NULL CHECK (Credits > 0),
+LeadProfessor VARCHAR(100) NULL
+);
+
+CREATE TABLE Students (
+StudentID INT PRIMARY KEY IDENTITY(1,1),
+FirstName VARCHAR(50) NOT NULL,
+LastName VARCHAR(50) NOT NULL,
+EnrollmentDate DATE NOT NULL,
+GPA DECIMAL(3,2) NULL CHECK (GPA BETWEEN 0.00 AND 4.00)
+);
+
+INSERT INTO Departments (DepartmentName, Budget) VALUES
+('Computer Science', 2500000),
+('Mechanical Engineering', 1800000),
+('Electrical Engineering', 1700000),
+('Civil Engineering', 1500000),
+('Mathematics', 900000),
+('Physics', 850000),
+('Biology', 800000),
+('Chemistry', 920000),
+('English', 500000),
+('History', 400000);
+
+INSERT INTO Students (FirstName, LastName, EnrollmentDate, GPA) VALUES
+('Arjun','Sharma','2022-07-01',3.45),
+('Sneha','Khan','2021-07-01',3.80),
+('Ravi','Patel','2022-07-01',3.20),
+('Priya','Singh','2023-07-01',3.60),
+('Aman','Verma','2020-07-01',3.10),
+('Sana','Ali','2019-07-01',3.90),
+('Vikram','Jain','2021-01-15',2.95),
+('Divya','Nair','2022-08-10',3.70),
+('Karan','Bhatia','2023-01-05',3.00),
+('Meera','Shah','2020-09-20',3.55);
+
+INSERT INTO Courses (CourseCode, CourseName, DepartmentID, Credits, LeadProfessor)
+VALUES
+('CS101', 'Intro to Programming', 1, 4, 'Rahul Mehta'),
+('CS201', 'Data Structures', 1, 4, 'John Matthew'),
+('ME101','Thermodynamics', 2, 3, 'Neha Singh'),
+('EE101','Circuit Analysis', 3, 3, 'Anita Roy'),
+('CE201','Strength of Materials', 4, 4, 'Peter Khan'),
+('MA101','Calculus I', 5, 4, 'Laura Gomez'),
+('PH101','Physics I', 6, 4, 'Ibrahim Ali'),
+('BI101','Biology I', 7, 3, 'Sophie Turner'),
+('CH101','Inorganic Chemistry', 8, 3, 'Carlos Mendez'),
+('EN101','English Literature', 9, 2, 'Mina Patel');

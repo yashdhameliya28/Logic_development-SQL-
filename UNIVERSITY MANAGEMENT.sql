@@ -1,0 +1,77 @@
+--1. List all courses from departments that have a budget greater than 1 million.
+SELECT	C.COURSENAME
+FROM COURSES C
+JOIN DEPARTMENTS D
+ON C.DEPARTMENTID = D.DEPARTMENTID
+WHERE D.BUDGET > 1000000
+
+--2. List all departments along with the number of courses they offer.
+SELECT	D.DEPARTMENTNAME AS DEPT_NAME,
+		COUNT(C.COURSEID) AS TOTAL_COURSES
+FROM DEPARTMENTS D
+LEFT JOIN COURSES C
+ON D.DEPARTMENTID = C.DEPARTMENTID
+GROUP BY D.DEPARTMENTNAME
+
+--3. List all departments that offer more than 3 courses.
+SELECT	D.DEPARTMENTNAME AS DEPT_NAME,
+		COUNT(C.COURSEID) AS TOTAL_COURSES
+FROM DEPARTMENTS D
+LEFT JOIN COURSES C
+ON D.DEPARTMENTID = C.DEPARTMENTID
+GROUP BY D.DEPARTMENTNAME
+HAVING COUNT(C.COURSEID) > 3
+
+--4. Find the course with the second-highest credit hours in the 'Computer Science' department.
+SELECT	C.COURSENAME,
+   	    C.CREDITS
+FROM COURSES C
+JOIN DEPARTMENTS D
+ON D.DEPARTMENTID = C.DEPARTMENTID
+WHERE D.DEPARTMENTNAME = 'COMPUTER SCIENCE'
+ORDER BY C.CREDITS DESC
+OFFSET 1 ROW FETCH NEXT 1 ROW ONLY
+
+--5. List all students whose GPA is above the average GPA of all students.
+SELECT	FIRSTNAME,
+		LASTNAME
+FROM STUDENTS
+WHERE GPA > (SELECT AVG(GPA) FROM STUDENTS)
+
+--6. Find the department with the highest number of courses.
+SELECT TOP 1 D.DEPARTMENTNAME AS DEPT_NAME,
+		     COUNT(C.COURSEID) AS TOTAL_COURSES
+FROM DEPARTMENTS D
+LEFT JOIN COURSES C
+ON D.DEPARTMENTID = C.DEPARTMENTID
+GROUP BY D.DEPARTMENTNAME
+ORDER BY COUNT(C.COURSEID) DESC
+
+--7. List students who enrolled on the same enrollment date as at least one other student.
+SELECT	ENROLLMENTDATE,
+		COUNT(STUDENTID)
+FROM STUDENTS
+GROUP BY ENROLLMENTDATE
+HAVING COUNT(STUDENTID) > 1
+
+--8. Find all courses where the LeadProfessor name contains the word 'Head'.
+SELECT	COURSENAME,
+		LEADPROFESSOR
+FROM COURSES
+WHERE LEADPROFESSOR LIKE '%HEAD%'
+
+--9. Retrieve courses offered by departments whose budget is above the average department budget.
+SELECT	C.COURSENAME
+FROM COURSES C
+JOIN DEPARTMENTS D
+ON C.DEPARTMENTID = D.DEPARTMENTID
+WHERE D.BUDGET > (SELECT AVG(BUDGET) FROM DEPARTMENTS)
+GROUP BY C.COURSENAME
+
+--10. List students who enrolled after the earliest enrollment date in the table.
+SELECT FirstName
+FROM Students
+WHERE EnrollmentDate > (
+    SELECT MIN(EnrollmentDate)
+    FROM Students
+)
